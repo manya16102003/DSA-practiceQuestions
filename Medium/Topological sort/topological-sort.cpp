@@ -6,33 +6,45 @@ using namespace std;
 class Solution
 {
 	public:
-	//Function to return list containing vertices in Topological order. 
-	void dfstopo(int src , vector<int> adj[] ,  unordered_map<int, bool>&visited , vector<int>&ans)
+	//Function to return list containing vertices in Topological order.
+	void bfs(int V , vector<int>&ans ,  vector<int> adj[])
 	{
-	    visited[src]=1;
-	    for(auto nbr:adj[src])
-	    {
-	        if(!visited[nbr])
-	        {
-	            dfstopo(nbr , adj , visited , ans);
-	        }
-	    }
-	    ans.push_back(src);
+	   queue<int>q;
+	   unordered_map<int , int>indegree;
+	   for(int i=0;i<V;i++)
+	   {
+	       for(auto nbr:adj[i])
+	       {
+	           indegree[nbr]++;
+	       }
+	   }
+	   for(int i=0;i<V;i++)
+	   {
+	       if(indegree[i]==0)
+	       q.push(i);
+	   }
+	   while(!q.empty())
+	   {
+	       int frontnode=q.front();
+	       q.pop();
+	       ans.push_back(frontnode);
+	       for(auto nbr:adj[frontnode])
+	       {
+	           indegree[nbr]--;
+	           if(indegree[nbr]==0)
+	           q.push(nbr);
+	       }
+	       
+	   }
+	   
+	   
 	}
 	vector<int> topoSort(int V, vector<int> adj[]) 
 	{
 	    // code here
 	    vector<int>ans;
-	    unordered_map<int, bool>visited;
-	    for(int i=0;i<V;i++)
-	    {
-	        if(!visited[i])
-	        {
-	            dfstopo(i,adj,visited, ans);
-	        }
-	    }
-	    reverse(ans.begin(),ans.end());
-	    return ans;
+	   bfs(V , ans , adj);
+	   return ans;
 	}
 };
 
