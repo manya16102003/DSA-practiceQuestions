@@ -3,40 +3,53 @@
 using namespace std;
 
 // } Driver Code Ends
+
 class Solution
 {
 	public:
-	//Function to return list containing vertices in Topological order.
-	void istopological(int src ,unordered_map<int , bool>&visisted,vector<int>&ans , vector<int> adj[] )
-	{
-	    visisted[src]=true;
-	    for(auto nbr: adj[src])
-	    {
-	        if(!visisted[nbr])
-	        {
-	            istopological(nbr , visisted , ans , adj);
-	            
-	        }
-	    }
-	    ans.push_back(src);
-	}
-	
+	//Function to return list containing vertices in Topological order. 
 	vector<int> topoSort(int V, vector<int> adj[]) 
 	{
 	    // code here
 	    vector<int>ans;
-	    unordered_map<int , bool>visisted;
+	    queue<int>q;
+	    unordered_map<int,int>indegree;
 	    for(int i=0;i<V;i++)
 	    {
-	        if(!visisted[i])
+	        for(int nbr:adj[i])
 	        {
-	            istopological(i ,visisted , ans ,adj);
+	            indegree[nbr]++;
+	        }
+	        
+	    }
+	    
+	    for(int i=0;i<V;i++)
+	    {
+	        if(indegree[i]==0)
+	        {
+	            q.push(i);
 	        }
 	    }
-	    reverse(ans.begin() , ans.end());
+	    
+	    while(!q.empty())
+	    {
+	        int node=q.front();
+	        q.pop();
+	        ans.push_back(node);
+	        for(auto nbr:adj[node])
+	        {
+	            indegree[nbr]--;
+	            if(indegree[nbr]==0)
+	            {
+	                q.push(nbr);
+	            }
+	        }
+	    }
 	    return ans;
+	    
 	}
 };
+
 
 //{ Driver Code Starts.
 
